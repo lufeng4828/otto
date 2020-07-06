@@ -186,8 +186,11 @@ func newError(rt *_runtime, name string, stackFramesToPop int, in ...interface{}
 			description, in = in[0].(string), in[1:]
 		}
 	}
-	err.message = err.describe(description, in...)
-
+	if len(in) > 0 {
+		err.message = err.describe(description, in...)
+	} else {
+		err.message = description
+	}
 	return err
 }
 
