@@ -291,34 +291,35 @@ func (self *_runtime) convertNumeric(v Value, t reflect.Type) reflect.Value {
 }
 
 func fieldIndexByName(t reflect.Type, name string) []int {
-	for i := 0; i < t.NumField(); i++ {
-		f := t.Field(i)
-
-		if !validGoStructName(f.Name) {
-			continue
-		}
-
-		if f.Anonymous {
-			if a := fieldIndexByName(f.Type, name); a != nil {
-				return append([]int{i}, a...)
-			}
-		}
-
-		if a := strings.SplitN(f.Tag.Get("json"), ",", 2); a[0] != "" {
-			if a[0] == "-" {
+	if t.Kind() != reflect.Struct {
+		return []int{}
+	} else {
+		for i := 0; i < t.NumField(); i++ {
+			f := t.Field(i)
+			if !validGoStructName(f.Name) {
 				continue
 			}
+			if f.Anonymous {
+				if a := fieldIndexByName(f.Type, name); a != nil {
+					return append([]int{i}, a...)
+				}
+			}
 
-			if a[0] == name {
+			if a := strings.SplitN(f.Tag.Get("json"), ",", 2); a[0] != "" {
+				if a[0] == "-" {
+					continue
+				}
+
+				if a[0] == name {
+					return []int{i}
+				}
+			}
+
+			if f.Name == name {
 				return []int{i}
 			}
 		}
-
-		if f.Name == name {
-			return []int{i}
-		}
 	}
-
 	return nil
 }
 
@@ -512,7 +513,6 @@ func (self *_runtime) convertCallParameter(v Value, t reflect.Type) reflect.Valu
 
 			for _, k := range o.propertyOrder {
 				idx := fieldIndexByName(t, k)
-
 				if idx == nil {
 					panic(self.panicTypeError("can't convert object; field %q was supplied but does not exist on target %v", k, t))
 				}
