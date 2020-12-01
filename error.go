@@ -3,7 +3,6 @@ package otto
 import (
 	"errors"
 	"fmt"
-	"reflect"
 	"github.com/robertkrimen/otto/file"
 )
 
@@ -247,15 +246,6 @@ func catchPanic(function func()) (err error) {
 				}
 				err = errors.New(caught.string())
 				return
-			default:
-				vt := reflect.TypeOf(caught).String()
-				if vt == "*errors.errorString" || vt == "runtime.errorString"{
-					err2 := &Error{}
-					err2.message = fmt.Sprintf("%v", caught)
-					err2.name = "runtime"
-					err = err2
-					return
-				}
 			}
 			panic(caught)
 		}
