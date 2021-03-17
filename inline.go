@@ -72,6 +72,7 @@ func _newContext(runtime *_runtime) {
 				call: builtinObject_toString,
 			},
 		}
+
 		toLocaleString_function := &_object{
 			runtime:     runtime,
 			class:       "Function",
@@ -1805,6 +1806,103 @@ func _newContext(runtime *_runtime) {
 				call: builtinString_replace,
 			},
 		}
+
+		replaceAll_function := &_object{
+			runtime:     runtime,
+			class:       "Function",
+			objectClass: _classObject,
+			prototype:   runtime.global.FunctionPrototype,
+			extensible:  true,
+			property: map[string]_property{
+				"length": _property{
+					mode: 0,
+					value: Value{
+						kind:  valueNumber,
+						value: 2,
+					},
+				},
+			},
+			propertyOrder: []string{
+				"length",
+			},
+			value: _nativeFunctionObject{
+				name: "replace2",
+				call: builtinString_replaceAll,
+			},
+		}
+
+		endsWith_function := &_object{
+			runtime:     runtime,
+			class:       "Function",
+			objectClass: _classObject,
+			prototype:   runtime.global.FunctionPrototype,
+			extensible:  true,
+			property: map[string]_property{
+				"length": _property{
+					mode: 0,
+					value: Value{
+						kind:  valueNumber,
+						value: 1,
+					},
+				},
+			},
+			propertyOrder: []string{
+				"length",
+			},
+			value: _nativeFunctionObject{
+				name: "endsWith",
+				call: builtinString_endsWith,
+			},
+		}
+
+		startsWith_function := &_object{
+			runtime:     runtime,
+			class:       "Function",
+			objectClass: _classObject,
+			prototype:   runtime.global.FunctionPrototype,
+			extensible:  true,
+			property: map[string]_property{
+				"length": _property{
+					mode: 0,
+					value: Value{
+						kind:  valueNumber,
+						value: 1,
+					},
+				},
+			},
+			propertyOrder: []string{
+				"length",
+			},
+			value: _nativeFunctionObject{
+				name: "startsWith",
+				call: builtinString_startsWith,
+			},
+		}
+
+		format_function := &_object{
+			runtime:     runtime,
+			class:       "Function",
+			objectClass: _classObject,
+			prototype:   runtime.global.FunctionPrototype,
+			extensible:  true,
+			property: map[string]_property{
+				"length": _property{
+					mode: 0,
+					value: Value{
+						kind:  valueNumber,
+						value: 1,
+					},
+				},
+			},
+			propertyOrder: []string{
+				"length",
+			},
+			value: _nativeFunctionObject{
+				name: "format",
+				call: builtinString_format,
+			},
+		}
+
 		search_function := &_object{
 			runtime:     runtime,
 			class:       "Function",
@@ -2205,6 +2303,13 @@ func _newContext(runtime *_runtime) {
 						value: replace_function,
 					},
 				},
+				"replaceAll": _property{
+					mode: 0101,
+					value: Value{
+						kind:  valueObject,
+						value: replaceAll_function,
+					},
+				},
 				"search": _property{
 					mode: 0101,
 					value: Value{
@@ -2231,6 +2336,27 @@ func _newContext(runtime *_runtime) {
 					value: Value{
 						kind:  valueObject,
 						value: substring_function,
+					},
+				},
+				"endsWith": _property{
+					mode: 0101,
+					value: Value{
+						kind:  valueObject,
+						value: endsWith_function,
+					},
+				},
+				"startsWith": _property{
+					mode: 0101,
+					value: Value{
+						kind:  valueObject,
+						value: startsWith_function,
+					},
+				},
+				"format": _property{
+					mode: 0101,
+					value: Value{
+						kind:  valueObject,
+						value: format_function,
 					},
 				},
 				"toLowerCase": _property{
@@ -2308,10 +2434,14 @@ func _newContext(runtime *_runtime) {
 				"lastIndexOf",
 				"match",
 				"replace",
+				"replaceAll",
 				"search",
 				"split",
 				"slice",
 				"substring",
+				"endsWith",
+				"startsWith",
+				"format",
 				"toLowerCase",
 				"toUpperCase",
 				"substr",

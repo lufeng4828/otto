@@ -15,7 +15,12 @@ func formatForConsole(argumentList []Value) string {
 }
 
 func builtinConsole_log(call FunctionCall) Value {
-	fmt.Fprintln(os.Stdout, formatForConsole(call.ArgumentList))
+	log := call.Otto.getValue("LOG")
+	if log.IsFunction() {
+		log.Call(call.This, call.ArgumentList)
+	}else{
+		fmt.Fprintln(os.Stdout, formatForConsole(call.ArgumentList))
+	}
 	return Value{}
 }
 

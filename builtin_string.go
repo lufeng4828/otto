@@ -2,6 +2,7 @@ package otto
 
 import (
 	"bytes"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -91,6 +92,108 @@ func builtinString_indexOf(call FunctionCall) Value {
 		index += int(start)
 	}
 	return toValue_int(index)
+}
+
+func builtinString_endsWith(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	value := call.This.string()
+	if call.Argument(0).IsDefined() {
+		target := call.Argument(0).string()
+		if len(target) > 0 {
+			return toValue_bool(strings.HasSuffix(value, target))
+		}
+	}
+	return toValue_bool(false)
+}
+
+func getItemAsStr(item interface{}) (string, error) {
+	var strVal string
+	var err error
+	switch item.(type) {
+	case int8:
+		strVal = strconv.FormatInt(int64(item.(int8)), 10)
+		break
+	case int16:
+		strVal = strconv.FormatInt(int64(item.(int16)), 10)
+		break
+	case int32:
+		strVal = strconv.FormatInt(int64(item.(int32)), 10)
+		break
+	case int64:
+		strVal = strconv.FormatInt(item.(int64), 10)
+		break
+	case int:
+		strVal = strconv.FormatInt(int64(item.(int)), 10)
+		break
+	case uint8:
+		strVal = strconv.FormatUint(uint64(item.(uint8)), 10)
+		break
+	case uint16:
+		strVal = strconv.FormatUint(uint64(item.(uint16)), 10)
+		break
+	case uint32:
+		strVal = strconv.FormatUint(uint64(item.(uint32)), 10)
+		break
+	case uint64:
+		strVal = strconv.FormatUint(item.(uint64), 10)
+		break
+	case uint:
+		strVal = strconv.FormatUint(uint64(item.(uint)), 10)
+		break
+	case string:
+		strVal = item.(string)
+		break
+	case bool:
+		strVal = strconv.FormatBool(item.(bool))
+		break
+	case float32:
+		strVal = strconv.FormatFloat(float64(item.(float32)), 'f', -1, 32)
+		break
+	case float64:
+		strVal = strconv.FormatFloat(item.(float64), 'f', -1, 64)
+		break
+	default:
+		strVal = fmt.Sprintf("%v", item)
+		break
+	}
+	return strVal, err
+}
+
+func builtinString_format(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	value := call.This.string()
+	if len(call.ArgumentList) == 0 {
+		return toValue_string(value)
+	}
+	formattedStr := value
+	body, _ := call.Argument(0).Export()
+	switch body.(type) {
+	case map[string]interface{}:
+		for key, val := range body.(map[string]interface{}) {
+			arg := "{" + key + "}"
+			strVal, _ := getItemAsStr(val)
+			formattedStr = strings.Replace(formattedStr, arg, strVal, -1)
+		}
+	default:
+		for index, val := range call.ArgumentList {
+			arg := "{" + strconv.Itoa(index) + "}"
+			strVal, _ := getItemAsStr(val)
+			formattedStr = strings.Replace(formattedStr, arg, strVal, -1)
+		}
+	}
+	return toValue_string(formattedStr)
+}
+
+func builtinString_startsWith(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	value := call.This.string()
+	if call.Argument(0).IsDefined() {
+		target := call.Argument(0).string()
+		if len(target) > 0 {
+			return toValue_bool(strings.HasPrefix(value, target))
+		}
+	}
+	return toValue_bool(false)
 }
 
 func builtinString_lastIndexOf(call FunctionCall) Value {
@@ -186,6 +289,17 @@ func builtinString_findAndReplaceString(input []byte, lastIndex int, match []int
 	})
 	output = append(output, replacement...)
 	return output
+}
+
+func builtinString_replaceAll(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	target := call.This.string()
+	if len(call.ArgumentList) > 1 {
+		searchValue := call.Argument(0).string()
+		replaceValue := call.Argument(1).string()
+		target = strings.ReplaceAll(target, searchValue, replaceValue)
+	}
+	return toValue_string(target)
 }
 
 func builtinString_replace(call FunctionCall) Value {
