@@ -2,6 +2,8 @@ package otto
 
 import (
 	"bytes"
+	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -50,6 +52,18 @@ func builtinStringCharAt(call FunctionCall) Value {
 		return stringValue("")
 	}
 	return stringValue(string(chr))
+}
+
+func builtinStringEndsWith(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	value := call.This.string()
+	if call.Argument(0).IsDefined() {
+		target := call.Argument(0).string()
+		if len(target) > 0 {
+			return boolValue(strings.HasSuffix(value, target))
+		}
+	}
+	return boolValue(false)
 }
 
 func builtinStringCharCodeAt(call FunctionCall) Value {
@@ -281,6 +295,17 @@ func builtinStringReplace(call FunctionCall) Value {
 	return stringValue(string(result))
 }
 
+func builtinStringReplaceAll(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	target := call.This.string()
+	if len(call.ArgumentList) > 1 {
+		searchValue := call.Argument(0).string()
+		replaceValue := call.Argument(1).string()
+		target = strings.ReplaceAll(target, searchValue, replaceValue)
+	}
+	return stringValue(target)
+}
+
 func builtinStringSearch(call FunctionCall) Value {
 	checkObjectCoercible(call.runtime, call.This)
 	target := call.This.string()
@@ -456,6 +481,48 @@ func builtinStringStartsWith(call FunctionCall) Value {
 		return boolValue(false)
 	}
 	return boolValue(target[:length] == search)
+}
+
+func getItemAsStr(value interface{}) (string, error) {
+	switch v := value.(type) {
+	case string:
+		return v, nil
+	case int, int8, int16, int32, int64:
+		return strconv.FormatInt(reflect.ValueOf(v).Int(), 10), nil
+	case uint, uint8, uint16, uint32, uint64:
+		return strconv.FormatUint(reflect.ValueOf(v).Uint(), 10), nil
+	case float32, float64:
+		return strconv.FormatFloat(reflect.ValueOf(v).Float(), 'f', -1, 64), nil
+	case bool:
+		return strconv.FormatBool(v), nil
+	default:
+		return fmt.Sprintf("%v", v), nil
+	}
+}
+
+func builtinStringFormat(call FunctionCall) Value {
+	checkObjectCoercible(call.runtime, call.This)
+	value := call.This.string()
+	if len(call.ArgumentList) == 0 {
+		return stringValue(value)
+	}
+	formattedStr := value
+	body, _ := call.Argument(0).Export()
+	switch body := body.(type) {
+	case map[string]interface{}:
+		for key, val := range body {
+			arg := "{" + key + "}"
+			strVal, _ := getItemAsStr(val)
+			formattedStr = strings.Replace(formattedStr, arg, strVal, -1)
+		}
+	default:
+		for index, val := range call.ArgumentList {
+			arg := "{" + strconv.Itoa(index) + "}"
+			strVal, _ := getItemAsStr(val)
+			formattedStr = strings.Replace(formattedStr, arg, strVal, -1)
+		}
+	}
+	return stringValue(formattedStr)
 }
 
 func builtinStringToLowerCase(call FunctionCall) Value {

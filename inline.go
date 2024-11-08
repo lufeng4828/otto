@@ -2004,6 +2004,43 @@ func (rt *runtime) newContext() {
 					},
 				},
 			},
+			"endsWith": {
+				mode: 0o101,
+				value: Value{
+					kind: valueObject,
+					value: &object{
+						runtime:     rt,
+						class:       classFunctionName,
+						objectClass: classObject,
+						prototype:   rt.global.FunctionPrototype,
+						extensible:  true,
+						property: map[string]property{
+							propertyLength: {
+								mode: 0,
+								value: Value{
+									kind:  valueNumber,
+									value: 1,
+								},
+							},
+							propertyName: {
+								mode: 0,
+								value: Value{
+									kind:  valueString,
+									value: "endsWith",
+								},
+							},
+						},
+						propertyOrder: []string{
+							propertyLength,
+							propertyName,
+						},
+						value: nativeFunctionObject{
+							name: "endsWith",
+							call: builtinStringEndsWith,
+						},
+					},
+				},
+			},
 			"charCodeAt": {
 				mode: 0o101,
 				value: Value{
@@ -2263,6 +2300,43 @@ func (rt *runtime) newContext() {
 					},
 				},
 			},
+			"replaceAll": {
+				mode: 0o101,
+				value: Value{
+					kind: valueObject,
+					value: &object{
+						runtime:     rt,
+						class:       classFunctionName,
+						objectClass: classObject,
+						prototype:   rt.global.FunctionPrototype,
+						extensible:  true,
+						property: map[string]property{
+							propertyLength: {
+								mode: 0,
+								value: Value{
+									kind:  valueNumber,
+									value: 2,
+								},
+							},
+							propertyName: {
+								mode: 0,
+								value: Value{
+									kind:  valueString,
+									value: "replaceAll",
+								},
+							},
+						},
+						propertyOrder: []string{
+							propertyLength,
+							propertyName,
+						},
+						value: nativeFunctionObject{
+							name: "replaceAll",
+							call: builtinStringReplaceAll,
+						},
+					},
+				},
+			},
 			"search": {
 				mode: 0o101,
 				value: Value{
@@ -2481,6 +2555,43 @@ func (rt *runtime) newContext() {
 						value: nativeFunctionObject{
 							name: "startsWith",
 							call: builtinStringStartsWith,
+						},
+					},
+				},
+			},
+			"format": {
+				mode: 0o101,
+				value: Value{
+					kind: valueObject,
+					value: &object{
+						runtime:     rt,
+						class:       classFunctionName,
+						objectClass: classObject,
+						prototype:   rt.global.FunctionPrototype,
+						extensible:  true,
+						property: map[string]property{
+							propertyLength: {
+								mode: 0,
+								value: Value{
+									kind:  valueNumber,
+									value: 0,
+								},
+							},
+							propertyName: {
+								mode: 0,
+								value: Value{
+									kind:  valueString,
+									value: "format",
+								},
+							},
+						},
+						propertyOrder: []string{
+							propertyLength,
+							propertyName,
+						},
+						value: nativeFunctionObject{
+							name: "format",
+							call: builtinStringFormat,
 						},
 					},
 				},
@@ -2897,6 +3008,7 @@ func (rt *runtime) newContext() {
 			propertyLength,
 			propertyConstructor,
 			"charAt",
+			"endsWith",
 			"charCodeAt",
 			"concat",
 			"indexOf",
@@ -2904,12 +3016,14 @@ func (rt *runtime) newContext() {
 			"localeCompare",
 			"match",
 			"replace",
+			"replaceAll",
 			"search",
 			"slice",
 			"split",
 			"substr",
 			"substring",
 			"startsWith",
+			"format",
 			methodToString,
 			"trim",
 			"trimLeft",

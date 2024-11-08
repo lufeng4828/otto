@@ -162,6 +162,8 @@ types:
           value: rt.global.String
         - name: charAt
           function: 1
+        - name: endsWith
+          function: 1
         - name: charCodeAt
           function: 1
         - name: concat
@@ -176,6 +178,8 @@ types:
           function: 1
         - name: replace
           function: 2
+        - name: replaceAll
+          function: 2
         - name: search
           function: 1
         - name: slice
@@ -188,6 +192,8 @@ types:
           function: 2
         - name: startsWith
           function: 1
+        - name: format
+          function: -1
         - name: toString
           function: -1
         - name: trim
