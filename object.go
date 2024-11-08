@@ -26,6 +26,7 @@ func newObject(rt *runtime, class string) *object {
 
 // 8.12.1.
 func (o *object) getOwnProperty(name string) *property {
+	println("xxxxxx", name)
 	return o.objectClass.getOwnProperty(o, name)
 }
 
