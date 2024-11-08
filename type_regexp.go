@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/robertkrimen/otto/parser"
+	"github.com/lufeng4828/otto/parser"
 )
 
 type regExpObject struct {

@@ -13,8 +13,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/robertkrimen/otto/ast"
-	"github.com/robertkrimen/otto/parser"
+	"github.com/lufeng4828/otto/ast"
+	"github.com/lufeng4828/otto/parser"
 )
 
 type global struct {

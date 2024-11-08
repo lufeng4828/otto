@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/robertkrimen/otto/parser"
+	"github.com/lufeng4828/otto/parser"
 	"github.com/stretchr/testify/require"
 )
 
