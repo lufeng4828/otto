@@ -3,7 +3,6 @@ module github.com/lufeng4828/otto
 go 1.22
 
 require (
-	github.com/robertkrimen/otto v0.5.1
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/text v0.4.0
 	gopkg.in/readline.v1 v1.0.0-20160726135117-62c6fe619375
@@ -12,7 +11,7 @@ require (
 )
 
 require (
-	github.com/chzyer/logex v1.2.1 // indirect
+	github.com/chzyer/test v1.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 )

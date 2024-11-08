@@ -209,7 +209,7 @@ It would not be difficult to provide something like these via Go, but you probab
 
 For an example of how this could be done in Go with otto, see natto:
 
-http://github.com/robertkrimen/natto
+http://github.com/lufeng4828/natto
 
 Here is some more discussion of the issue:
 
