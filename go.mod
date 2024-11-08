@@ -1,4 +1,4 @@
-module github.com/robertkrimen/otto
+module github.com/lufeng4828/otto
 
 go 1.22
 
